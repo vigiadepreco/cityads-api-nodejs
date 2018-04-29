@@ -8,18 +8,18 @@ module.exports = function(clientid, secretkey, remoteauth){
         /**
          * Function to generate the API request
          *
-         * @param string URL 
+         * @param string URL
          * @param function cb
          */
-        getinapi: function(URL, cb) {   
-            request(URL, (error, response, body) => { 
+        getinapi: function(URL, cb) {
+            request(URL, (error, response, body) => {
                 if(body)
                     body = JSON.parse(body);
-                
-                cb(error, body); 
+
+                cb(error, body);
             });
         },
-        
+
         /**
          * Function to generate application link
          *
@@ -35,10 +35,10 @@ module.exports = function(clientid, secretkey, remoteauth){
 
             return URLbase + ((URLbase.indexOf("?") >= 0) ? "" : "?") + paramsStr;
         },
-        
+
         /**
          * Function to encode URL
-         * 
+         *
          * @see http://locutus.io/php/url/urlencode/
          * @param str
          * @return str
@@ -47,12 +47,33 @@ module.exports = function(clientid, secretkey, remoteauth){
             str = (str + '');
             return encodeURIComponent(str).replace(/!/g, '%21').replace(/'/g, '%27').replace(/\(/g, '%28').replace(/\)/g, '%29').replace(/\*/g, '%2A').replace(/%20/g, '+')
         },
-                
+
+        /**
+         * Get advertiser programs
+         *
+         * @see https://cityads.com/api/dev/webmaster/offers?lang=en
+         * @param geo integer (https://cityads.com/api/dev/webmaster/lists?lang=en#GETgeo-list)
+         * @param function cb
+         */
+        programs: function(geo, cb) {
+            this.getinapi("http://api.cityads.com/api/rest/webmaster/json/offers/all?geo=br&remote_auth=" + remoteauth + "&geo=" + geo, cb);
+        },
+
+        /**
+         * Get coupons, including their tracking links
+         *
+         * @see https://cityads.com/publisher/coupons
+         * @param function cb
+         */
+        coupons: function(filter, cb){
+            this.getinapi("http://cityads.com/api/rest/webmaster/json/coupons?remote_auth=" + remoteauth + "&filter=" + filter, cb);
+        },
+
         /**
          * Returns basic statistics of clicks, views, leads and sales
-         * 
+         *
          * @see https://developers.cityads.com/api/dev/webmaster/statistics?lang=en
-         * @param string typereport 
+         * @param string typereport
          * statistics-offers - Retrieves stats data for offers, This method retrieves the list of offers with the data and efficiency for each of them. The list contains offers that showed conversions within the set period of time (from date_from to date_to).
          * statistics-segments - Retrieves stats data for offer types and business categories. This method retrieves the list of offer types, verticals, categories or sub-categories (depending on the param in the group_field).
          * statistics-actions - Retrieves stats for conversion types (leads and sales), or for payment methods (depending on the group_field param).
@@ -72,42 +93,42 @@ module.exports = function(clientid, secretkey, remoteauth){
         report: function(typereport, groupfield, datestart, dateend, cb){
             this.getinapi("http://api.cityads.com/api/rest/webmaster/json/" + typereport + "/" + groupfield + "/" + datestart + "/" + dateend + "?remote_auth=" + remoteauth, cb);
         },
-        
+
         /**
          * Create tracking links
-         * 
+         *
          * @param string url
          * @param integer progid
          * @return void
          */
         deeplink: function(url, storeid, cb){
             var _this = this;
-            
-            request("http://api.cityads.com/api/rest/webmaster/json/offer-links/" + storeid + "?remote_auth=" + remoteauth, (error, response, body) => { 
+
+            request("http://api.cityads.com/api/rest/webmaster/json/offer-links/" + storeid + "?remote_auth=" + remoteauth, (error, response, body) => {
                 if(error){
                     cb(error, null);
                 }
-                else{                    
+                else{
                     var contentsJSON = JSON.parse(body);
-                            
+
                     if(contentsJSON.status == 200){
                         var p = false;
-                        
+
                         for(var key2 in contentsJSON.data.items){
                             if(contentsJSON.data.items[key2].is_default){
                                 p = true;
                                 cb(false, contentsJSON.data.items[key2].deep_link+"?url="+_this.urlencode(url));
                                 break;
                             }
-                        }        
-                        
+                        }
+
                         if(!p)
                             cb({"msg": "Invalid link to this program."}, null);
                     }
                     else if(contentsJSON.status == 403){
                         cb({"msg": "No authorization in the program."}, null);
                     }
-                    else{                        
+                    else{
                         cb({"msg": "Invalid link to this program."}, null);
                     }
                 }

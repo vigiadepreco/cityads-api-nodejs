@@ -1,18 +1,23 @@
 {
     "name": "cityads-api",
-    "version": "0.1.5",
+    "version": "0.1.7",
     "description": "API integration with CityAds",
     "author": "André Ferreira <andrehrf@gmail.com>",
     "main": "index.js",
+    "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/itsimpleapp/cityads-api-nodejs"
+        "url": "https://github.com/vigiadepreco/cityads-api-nodejs"
     },
     "bugs": {
-        "url": "https://github.com/itsimpleapp/cityads-api-nodejs/issues"
+        "url": "https://github.com/vigiadepreco/cityads-api-nodejs/issues"
     },
-    "homepage": "https://github.com/itsimpleapp/cityads-api-nodejs",
+    "keywords": [
+        "api",
+        "cityads"
+    ],
+    "homepage": "https://github.com/vigiadepreco/cityads-api-nodejs",
     "dependencies": {
-        "request": "^2.72.0"
+        "request": "^2.85.0"
     }
 }
