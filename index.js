@@ -56,7 +56,7 @@ module.exports = function(clientid, secretkey, remoteauth){
          * @param function cb
          */
         programs: function(geo, cb) {
-            this.getinapi("http://api.cityads.com/api/rest/webmaster/json/offers/all?geo=br&remote_auth=" + remoteauth + "&geo=" + geo, cb);
+            this.getinapi("http://api.cityads.com/api/rest/webmaster/json/offers/all?remote_auth=" + remoteauth + "&geo=" + geo, cb);
         },
 
         /**
@@ -91,7 +91,8 @@ module.exports = function(clientid, secretkey, remoteauth){
          * @param function cb
          */
         report: function(typereport, groupfield, datestart, dateend, cb){
-            this.getinapi("http://api.cityads.com/api/rest/webmaster/json/" + typereport + "/" + groupfield + "/" + datestart + "/" + dateend + "?remote_auth=" + remoteauth, cb);
+            groupfield = (typeof groupfield == "string") ? "/" + groupfield : "";
+            this.getinapi("http://api.cityads.com/api/rest/webmaster/json/" + typereport + groupfield + "/" + datestart + "/" + dateend + "?remote_auth=" + remoteauth, cb);
         },
 
         /**
