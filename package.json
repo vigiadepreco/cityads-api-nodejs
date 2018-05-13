@@ -1,6 +1,6 @@
 {
     "name": "cityads-api",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "description": "API integration with CityAds",
     "author": "André Ferreira <andrehrf@gmail.com>",
     "main": "index.js",
